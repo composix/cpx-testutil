@@ -1,0 +1,300 @@
+openapi: 3.0.3
+info:
+  title: CSSA
+  version: 1.0.0
+servers:
+  - url: "http://api.test.boip.local/api/zendesk"
+    description: test
+  - url: "http://api-acc.boip.int/api/zendesk"
+    description: acceptatie
+  - url: "http://api.boip.int/api/zendesk"
+    description: productie
+paths:
+  /persons:
+    get:
+      operationId: findPerson
+      summary: zoek persoon op basis van voorhanden informatie
+      description: |
+        In het contact vanuit de helpdesk zijn er situaties waarin informatie
+        voorhanden is, zoals telefoonnummer, email adres, postcode, etc., 
+        waarmee we een persoon die bekend is in onze systemen kunnen identificeren.
+        We kunnen dan deze operatie aanroepen om te zien of de persoon al dan niet
+        klant is. Zo ja, dan kunnen we met deze API de juiste gegevens ophalen om
+        de klant zo goed mogelijk te kunnen helpen.
+        
+        Meerdere zoekcriteria kunnen worden opgegeven.De perso(o)n(en) die aan alle 
+        criteria voldoen worden teruggegeven. Zo kunnen we als er meerdere personen
+        gevonden worden onze query verfijnen om zo de juiste persoon in onze systemen
+        te kunnen identificeren. Alle matches zijn exact, maar er kan een wildcard %
+        gebruikt worden voor een gedeeltelijk match. Bijvoorbeeld: met initials=JW% 
+        zoeken we alle personen waarvan de initialen beginnen met J.W.
+        Of met phone=%12345678 zoeken we alle personen waarvan het telefoonnummer
+        eindigt op 12345678.
+      parameters:
+        - $ref: "#/components/parameters/searchLastname"
+        - $ref: "#/components/parameters/searchInitials"
+        - $ref: "#/components/parameters/searchFirstname"
+        - $ref: "#/components/parameters/searchEmail"
+        - $ref: "#/components/parameters/searchPhone"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Person"
+              example:
+                - contactId: 38600
+                  fullname: MW Holder 1
+                  firstname: MW
+                  middlename: Holder
+                  lastname: "1"
+                  gender: "M"
+                  email:
+                    - klop@int.boip
+                    - alt@boip.int
+                    - mwholder1@int.boip
+                  phone:
+                    - "0611225544"
+                    - "0611225544"
+                  language: NL
+  /persons/{contactId}/addresses:
+   get:
+      parameters:
+        - $ref: "#/components/parameters/contactId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Address"
+              example:
+                - state: ""
+                  street: Kalverstraat
+                  zipCode: 1234AB
+                  city: Oslo
+                  countryCode: NL
+                  houseNumber: "1"
+                  houseNumberExtension: Ook hier staat nu een lange text
+                - state: null
+                  street: Kalverstraata
+                  zipCode: 1234AB
+                  city: Oslo
+                  countryCode: "NO"
+                  houseNumber: "1"
+                  houseNumberExtension: ""
+  /persons/{contactId}/user:
+    get:
+      parameters:
+        - $ref: "#/components/parameters/contactId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              example:
+                userId: acc-holder-mw-1
+                accountAdmin: true
+  /persons/{contactId}/customer:
+    get:
+      parameters:
+        - $ref: "#/components/parameters/contactId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+              example:
+                customerId: 2329152
+                companyName: MW Holder 1
+                address:
+                  state: null
+                  street: Kalverstraata
+                  zipCode: 1234AB
+                  city: Oslo
+                  countryCode: "NO"
+                  houseNumber: "1"
+                  houseNumberExtension: ""
+  /persons/{contactId}/register:
+    get:
+      parameters:
+        - $ref: "#/components/parameters/contactId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterPerson"
+              example:
+                relationId: 10640408
+                accountType: PERSON
+                relationType: APPLICANT
+                registerName: MW Holder 1
+                firstName: MW
+                middleName: Holder
+                lastName: "1"
+                companyName: ""
+                address:
+                  state: ""
+                  street: Kalverstraat
+                  zipCode: 1234AB
+                  city: Oslo
+                  countryCode: NL
+                  houseNumber: "1"
+                  houseNumberExtension: Ook hier staat nu een lange text
+components:
+  parameters:
+    contactId:
+      name: contactId
+      description: unique identifier of a CSSA contact
+      in: path
+      required: true
+      schema:
+        type: integer
+    searchLastname:
+      name: lastname
+      description: zoek op basis van achternaam
+      in: query
+      required: false
+      schema:
+        type: string
+    searchInitials:
+      name: initials
+      description: zoek op basis van initialen
+      in: query
+      required: false
+      schema:
+        type: string
+    searchFirstname:
+      name: firstname
+      description: zoek op basis van voornaam
+      in: query
+      required: false
+      schema:
+        type: string
+    searchEmail:
+      name: email
+      description: zoek op basis van email adres
+      in: query
+      required: false
+      schema:
+        type: string
+    searchPhone:
+      name: phone
+      description: zoek op basis van telefoonnummer
+      in: query
+      required: false
+      schema:
+        type: string
+  schemas:
+    Person:
+      type: object
+      properties:
+        contactId:
+          type: string
+        fullname:
+          type: string
+          description: cssa=contact.fullName
+        firstname:
+          type: string
+          description: cssa=contact.firstName
+        middlename:
+          type: string
+          description: cssa=contact.middleName
+        lastname:
+          type: string
+          description: cssa=contact.lastName
+        gender:
+          type: string
+          description: cssa=contact.genderCode
+          enum: [M,V]
+        email:
+          type: array
+          description: |
+            cssa=[
+                contact.email,
+                contact.alternateEmail,
+                customer.email]
+          items:
+            type: string
+        emailNotification:
+          type: boolean
+          description: cssa=contact.isReceiverNotificationMail
+        phone:
+          type: array
+          description: |
+            cssa=[
+                contact.phone,
+                contact.alternatePhone
+                customer.phone]
+          items:
+            type: string
+        language:
+          type: string
+          description: cssa=contact.languageCode
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: cssa=user.id
+        accountAdmin:
+          type: boolean
+          description: cssa=account.accountAdmin; account.userAdmin not used
+    Customer:
+      type: object
+      properties:
+        customerId:
+          type: integer
+        companyName:
+          type: string
+        address:
+          $ref: "#/components/schemas/Address"
+    RegisterPerson:
+      type: object
+      properties:
+        accountType:
+          type: string
+          enum: [PERSON,...] # add missing enums
+        relationType:
+          type: string
+          enum: [HOLDER,REPRESENTATIVE]
+        registerName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        companyName:
+          type: string
+        address:
+          $ref: "#/components/schemas/Address"
+    Address:
+      type: object
+      properties:
+        state:
+          type: string
+        street:
+          type: string
+        zipCode:
+          type: string
+        city:
+          type: string
+        countryCode:
+          type: string
+        houseNumber:
+          type: string
+        houseNumberExtension:
+          type: string

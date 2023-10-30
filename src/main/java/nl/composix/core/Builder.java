@@ -25,16 +25,29 @@
 
 package nl.composix.core;
 
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public interface Tree<A,B> extends Map<A,B> {
-    int indexOf(A key);
-    Stream<Entry<A,B>> entries();
+public interface Builder<A,B> {
+    static <T> int forEachIndex(Stream<T> stream, BiConsumer<Integer,T> consumer) {
+        final AtomicInteger index = new AtomicInteger(-1);
+        stream.forEach(item -> consumer.accept(index.incrementAndGet(), item));
+        return index.incrementAndGet();
+    }
 
-    boolean isLeafAt(int index);
-    Map<?,?> mapAt(int... index);
-    Tree<?,?> nodeAt(int... index);
+    static void forEachIndex(final int size, Consumer<Integer> consumer) {
+        for (int i = 0; i < size; ++i) {
+            consumer.accept(i);
+        }
+    }
 
-    <V> void assign(V value);
+    static <T> Builder<Integer,T> targets(T[][] targets) {
+        return new NodeBuilder<>(targets);
+    }
+
+    Builder<String,B> keys(String... keys);
+
+    Tree<Integer,Tree<A,B>> build();
 }

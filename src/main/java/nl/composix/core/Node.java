@@ -39,9 +39,34 @@ public class Node<A,B> extends AbstractMap<A,B> implements Tree<A,B> {
 
     protected int index;
 
+    @SuppressWarnings("unchecked")
+    static <K,V> Tree<Integer,Tree<K,V>> createNodes(V[][] targets, K[] source) {
+        return new Node<>((Node<K,V>[]) nodes(targets, source));
+    }
+
     public Node(A[] source, B[] target) {
+        if (source == null) {
+            throw new NullPointerException("source");
+        }
+        if (target == null) {
+            throw new NullPointerException("target");
+        }
         this.source = source;
         this.target = target;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Node(B[] target) {
+        this((A[]) new Integer[0], target);
+    }
+
+    static private Tree<?,?>[] nodes(Object[][] values, Object[] keys) {
+        final int size = values.length;
+        final Tree<?,?>[] result = new Node[keys.length];
+        for (int i = 0; i < size; ++i) {
+            result[i] = new Node<>(keys, values[i]);
+        }
+        return result;
     }
 
     @Override
@@ -50,6 +75,11 @@ public class Node<A,B> extends AbstractMap<A,B> implements Tree<A,B> {
         for (int i = 0; i < size; ++i) {
             if (key.equals(source[i])) {
                 return i;
+            }
+        }
+        if (source instanceof Integer[]) {
+            if ((int) key < target.length) {
+                return (int) key;
             }
         }
         for (int i = 0; i < size; ++i) {
@@ -63,7 +93,22 @@ public class Node<A,B> extends AbstractMap<A,B> implements Tree<A,B> {
 
     @Override
     public Stream<Entry<A,B>> entries() {
-        return IntStream.range(0, target.length).filter(i -> target[i] != null).mapToObj(i -> new AbstractMap.SimpleEntry<>(i < source.length ? source[i] : null, target[i]));
+        if (source instanceof Integer[]) {
+            return IntStream
+                .range(0, target.length)
+                .filter(i -> target[i] != null)
+                .mapToObj(i -> new AbstractMap.SimpleEntry<>(
+                    sourceOf(i),
+                    target[i]
+                ));
+        }
+        return IntStream
+            .range(0, target.length)
+            .filter(i -> target[i] != null)
+            .mapToObj(i -> new AbstractMap.SimpleEntry<>(
+                i < source.length ? source[i] : null,
+                target[i]
+            ));
     }
 
     @Override
@@ -103,5 +148,28 @@ public class Node<A,B> extends AbstractMap<A,B> implements Tree<A,B> {
     @Override
     public Set<Entry<A, B>> entrySet() {
         return entries().collect(Collectors.toSet());
-    } 
+    }
+
+    @Override
+    public <V> void assign(V value) {
+        if (value instanceof Object[]) {
+            for (int i = 0; i < target.length; ++i) {
+                if (target[i] instanceof Tree) {
+                    ((Tree<?,?>) target[i]).assign(((Object[]) value)[i]);
+                } else {
+                    assignTarget(i, (Object[]) value);
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void assignTarget(int index, Object[] value) {
+        target[index] = (B) value[index];
+    }
+
+    @SuppressWarnings("unchecked")
+    private A sourceOf(int index) {
+        return index < source.length ? source[index] :(A) Integer.valueOf(index);
+    }
 }
