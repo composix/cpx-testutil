@@ -26,8 +26,14 @@ package io.github.composix.testing;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 
-public class TestCase {
+import io.github.composix.math.Args;
+import io.github.composix.math.ArgsOrdinal;
+import io.github.composix.math.MutableOrder;
+import io.github.composix.math.Ordinal;
+
+public class TestCase implements ArgsOrdinal{
     private static final TestCase DEFAULT = new DefaultTestCase();
+    private static final MutableOrder ORDER = OMEGA.order();
 
     private TestCase instance;
 
@@ -35,11 +41,27 @@ public class TestCase {
         instance = DEFAULT;
     }
 
+    @Override
+    public MutableOrder clone() throws CloneNotSupportedException {
+        return (MutableOrder) OMEGA.clone();
+    }
+
+    @Override
+    public MutableOrder order() {
+        return ORDER;
+    };
+
     public void register(TestCase factory) {
         instance = factory;
     }
 
     public TestData testData(WireMockRuntimeInfo wm, String baseUrl) {
         return instance.testData(wm, baseUrl);
-    };
+    }
+
+    @Override
+    public Args extend(Ordinal col, Object... arrays) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'extend'");
+    }
 }
