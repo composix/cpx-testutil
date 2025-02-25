@@ -39,9 +39,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 
 class TestDataRoot extends CharSequenceNode implements TestData {
-    WireMockRuntimeInfo wm;
-    URI base;
-    ObjectMapper mapper;
+    final URI base;
+    final ObjectMapper mapper;
 
     List<CharSequence[]> paths;
 
@@ -51,18 +50,27 @@ class TestDataRoot extends CharSequenceNode implements TestData {
 
     TestDataRoot(WireMockRuntimeInfo wm, String baseUrl) {
         super("~");
-        this.wm = wm;
-        base = URI.create(baseUrl);
         mapper = new ObjectMapper();
         mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        URI base = URI.create(baseUrl);
+        try {
+            mapper.readTree(base.toURL());
+        } catch (IOException e) {
+            base = URI.create(wm.getHttpBaseUrl());
+            try {
+                mapper.readTree(base.toURL());
+            } catch (IOException e1) {
+                throw new RuntimeException(e1);
+            }
+        }
+        this.base = base;
         paths = new ArrayList<>();
     }
 
     @Override
     public TestData select(CharSequence... path) {
         final int length = path.length;
-        final int lastIndex = length - 1;
         int index = Collections.binarySearch(paths, path, TestDataRoot::compare);
         CharSequence[] rhs;
         if (index < 0) {
@@ -75,7 +83,7 @@ class TestDataRoot extends CharSequenceNode implements TestData {
             }
             rhs = paths.get(index);
             for (int i = 0; i < length; ++i) {
-                if (!path[i].equals(rhs[i])) {
+                if (path[i] != rhs[i] && !path[i].equals(rhs[i])) {
                     if (!"~".equals(path[0])) {
                         throw new IllegalArgumentException();
                     }    
@@ -87,11 +95,21 @@ class TestDataRoot extends CharSequenceNode implements TestData {
         } else {
             rhs = paths.get(index);
         }
-        short range = (short) (length << TestDataNode.SHIFT);
-        range |= index;
+        int lastIndex = length - 1;
+        int pos = index;
         CharSequence result = rhs[lastIndex];
-        if (!(result instanceof TestData)) {
-            result = rhs[lastIndex] = new TestDataNode(result, this, range);
+        if (result == null) {
+            result = rhs[--lastIndex];
+            if (!(result instanceof TestData)) {
+                pos |= lastIndex << TestDataNode.SHIFT;
+                result = rhs[lastIndex] = new TestDataNode(result, this, pos);
+            }
+            ((TestDataNode) result).slash = true;
+        } else if (result instanceof TestData) {
+            ((TestDataNode) result).slash = false;
+        } else {
+            pos |= (short) (lastIndex << TestDataNode.SHIFT);
+            result = rhs[lastIndex] = new TestDataNode(result, this, pos);
         }
         return (TestData) result;
     }

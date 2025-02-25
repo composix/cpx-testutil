@@ -30,9 +30,10 @@ import io.github.composix.math.Args;
 import io.github.composix.math.ArgsOrdinal;
 import io.github.composix.math.MutableOrder;
 import io.github.composix.math.Ordinal;
+import io.github.composix.math.SafeMatrix;
 
 public class TestCase implements ArgsOrdinal{
-    private static final TestCase DEFAULT = new DefaultTestCase();
+    protected static final TestCase DEFAULT = new DefaultTestCase();
     private static final MutableOrder ORDER = OMEGA.order();
 
     private TestCase instance;
@@ -61,7 +62,6 @@ public class TestCase implements ArgsOrdinal{
 
     @Override
     public Args extend(Ordinal col, Object... arrays) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'extend'");
+        return new SafeMatrix<>().extend(col, arrays);
     }
 }

@@ -24,48 +24,61 @@
 
 package io.github.composix.testing;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 class TestDataNode extends CharSequenceNode implements TestData {
-    static final short SHIFT = Byte.SIZE, MASK = (1 << SHIFT) - 1;
+    static final int SHIFT = 24, MASK = (1 << SHIFT) - 1;
     
-    final TestDataRoot root;
-    final short range;
+    boolean slash = false;
+    private final TestDataRoot root;
+    private final int pos;
 
     private Object[] data;
 
-    TestDataNode(CharSequence segment, TestDataRoot root, short range) {
+    TestDataNode(CharSequence segment, TestDataRoot root, int pos) {
         super(segment);
         this.root = root;
-        this.range = range;
+        this.pos = pos;
     }
 
     @Override
     public <R extends Record> TestData refresh(Class<R> type) throws IOException {
-        final CharSequence[] path = root.paths.get(range & MASK);
-        boolean multi = true;
-        if (path[path.length - 1].charAt(0) == '=' && path[path.length - 2].charAt(0) == ':') {
-            multi = false;
-        }
-        final URI uri = URI.create(pathToUrl((byte) (range >> SHIFT), path));
-        try {
+        int position = position();
+        int index = position >>> SHIFT;
+        position &= MASK;
+        CharSequence[] path = root.paths.get(position);
+        if (++index == path.length) {
+            boolean multi = true;
+            if (path[path.length - 1].charAt(0) == '=' && path[path.length - 2].charAt(0) == ':') {
+                multi = false;
+            }
+            final URI uri = URI.create(pathToUrl((byte) index, path));
             if (multi) {
                 data = (Object[]) root.mapper.readValue(root.base.resolve(uri).toURL(), type.arrayType());
             } else {
-                data = new Object[1];
-                data[0] = root.mapper.readValue(root.base.resolve(uri).toURL(), type);
+                try {
+                    Object item = root.mapper.readValue(root.base.resolve(uri).toURL(), type);
+                    data = new Object[] { item };
+                } catch(FileNotFoundException e) {
+                    data = null;
+                }
             }
-        } catch(IOException e) {
-            final URI base = URI.create(root.wm.getHttpBaseUrl());
-            if (multi) {
-                data = (Object[]) root.mapper.readValue(base.resolve(uri).toURL(), type.arrayType());
-            } else {
-                data = new Object[1];
-                data[0] = root.mapper.readValue(root.base.resolve(uri).toURL(), type);
+        } else {
+            final List<CharSequence> prefix = Arrays.asList(path).subList(0, index);
+            while (prefix.equals(Arrays.asList(path).subList(0, index))) {
+                ((TestData) path[path.length - 1]).refresh(type);
+                try {
+                    path = root.paths.get(++position);
+                } catch(IndexOutOfBoundsException e) {
+                    break;
+                }
             }
         }
         return this;
@@ -73,10 +86,43 @@ class TestDataNode extends CharSequenceNode implements TestData {
 
     @Override
     public TestData select(CharSequence... path) {
+        int position = position();
+        int index = position >>> SHIFT;
+        position &= MASK;
+        CharSequence[] current = root.paths.get(position);
+        if (path.length == 0) {
+            return (TestData) current[--index];
+        }
         if ("~".equals(path[0].toString())) {
             return root.select(path);
         }
-        throw new UnsupportedOperationException("not yet implemented");
+        if (slash) {
+            ++index;
+            slash = false;
+        }
+        int lastIndex = index + path.length - 1;
+        for (int i = 0; i < path.length; ++i) {
+            if (current[index + i] == null) {
+                current[index + i] = path[i];
+            } else if (!current[index + i].equals(path[i])) {
+                final int length = index + path.length;
+                current = Arrays.copyOf(current, length);
+                System.arraycopy(path, i, current, index + i, path.length - i);
+                int pos = Collections.binarySearch(root.paths, current, TestDataRoot::compare);
+                if (pos >= 0) {
+                    throw new IllegalStateException();
+                }
+                pos = -pos - 1;
+                root.paths.add(pos, current);
+                pos |= lastIndex << SHIFT;
+                return (TestData) (current[length - 1] = new TestDataNode(path[path.length - 1], root, pos));
+            }
+        }
+        CharSequence result = current[lastIndex];
+        if (result instanceof TestData) {
+            return (TestData) result;
+        }
+        return (TestData) (current[lastIndex] = new TestDataNode(result, root, position | lastIndex << SHIFT));
     }
 
     @Override
@@ -84,6 +130,13 @@ class TestDataNode extends CharSequenceNode implements TestData {
         CharSequence[] path = myFirstPath();
         return (Stream<T>) Stream.of(((TestDataNode) path[path.length - 1]).data);
     }    
+
+    private int position() {
+        if (root.paths.get(pos & MASK)[pos >>> SHIFT] == this) {
+            return pos;
+        };
+        throw new IllegalStateException();
+    }
 
     private CharSequence[] myFirstPath() {
         final List<CharSequence[]> paths = root.paths;
