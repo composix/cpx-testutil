@@ -23,6 +23,7 @@
         <dependency>
             <groupId>io.github.composix</groupId>
             <artifactId>cpx-varargs</artifactId>
+            <version>0.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.wiremock</groupId>
