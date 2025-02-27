@@ -30,7 +30,7 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
     - name: Publish to GitHub Packages Apache Maven
-      run: mvn -B -ntp -DskipTest deploy -s .github/settings.xml
+      run: mvn -B -ntp -DskipTests deploy -s .github/settings.xml
       env:
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
