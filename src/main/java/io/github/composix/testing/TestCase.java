@@ -62,6 +62,6 @@ public class TestCase implements ArgsOrdinal{
 
     @Override
     public Args extend(Ordinal col, Object... arrays) {
-        return new SafeMatrix<>().extend(col, arrays);
+        return new SafeMatrix().extend(col, arrays);
     }
 }
