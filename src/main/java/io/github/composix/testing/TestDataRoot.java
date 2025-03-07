@@ -26,6 +26,8 @@ package io.github.composix.testing;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,37 +36,62 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 
 class TestDataRoot extends CharSequenceNode implements TestData {
-    final URI base;
+    final WireMockServer server;
     final ObjectMapper mapper;
+    final URI base, uriSwagger;
+    final JsonNode swagger;
+    final List<CharSequence[]> paths;
 
-    List<CharSequence[]> paths;
+    boolean readOnly = false;
 
     static int compare(CharSequence[] lhs, CharSequence[] rhs) {
         return Arrays.compare(lhs, rhs, Comparator.comparing(Object::toString));
     }
 
-    TestDataRoot(WireMockRuntimeInfo wm, String baseUrl) {
+    TestDataRoot(WireMockRuntimeInfo wm, URI uri, boolean wiremock) throws IOException, URISyntaxException {
         super("~");
+        server = new WireMockServer();
         mapper = new ObjectMapper();
         mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        URI base = URI.create(baseUrl);
-        try {
-            mapper.readTree(base.toURL());
-        } catch (IOException e) {
-            base = URI.create(wm.getHttpBaseUrl());
+        final URI base = uri.resolve("");
+        uriSwagger = base.relativize(uri);
+        if (wiremock) {
+            URI baseWM = new URI(wm.getHttpBaseUrl());
+            final URL url = baseWM.resolve(uriSwagger).toURL();
+            JsonNode swagger;
             try {
-                mapper.readTree(base.toURL());
-            } catch (IOException e1) {
-                throw new RuntimeException(e1);
+                swagger = mapper.readTree(url);
+                try {
+                    if (!swagger.equals(mapper.readTree(uri.toURL()))) {
+                        throw new IllegalStateException("OpenAPI spec has changed: " + uri);
+                    }
+                } catch(IOException e) {
+                    // silently ignore
+                }
+            } catch (IOException e) {
+                swagger = mapper.readTree(uri.toURL());
+                final String baseUrl = base.toString();
+                server.start();
+                server.startRecording(baseUrl.substring(0, baseUrl.length() - 1));
+                baseWM = new URI("http://localhost:8080");
+                if (!swagger.equals(mapper.readTree(baseWM.resolve(uriSwagger).toURL()))) {
+                    throw new IllegalStateException("OpenAPI spec has changed: " + uri);
+                }
             }
+            this.base = baseWM;
+            this.swagger = swagger;
+        } else {
+            this.base = base;
+            swagger = mapper.readTree(uri.toURL());
         }
-        this.base = base;
         paths = new ArrayList<>();
     }
 
@@ -83,7 +110,7 @@ class TestDataRoot extends CharSequenceNode implements TestData {
             }
             rhs = paths.get(index);
             for (int i = 0; i < length; ++i) {
-                if (path[i] != rhs[i] && !path[i].equals(rhs[i])) {
+                if (path[i] != rhs[i] && !rhs[i].equals(path[i])) {
                     if (!"~".equals(path[0])) {
                         throw new IllegalArgumentException();
                     }    
@@ -116,6 +143,9 @@ class TestDataRoot extends CharSequenceNode implements TestData {
 
     @Override
     public <R extends Record> TestData refresh(Class<R> recordClass) throws IOException {
+        if (readOnly) {
+            throw new IllegalStateException();
+        }
         try {
             paths.forEach(path -> {
                 final int length = path.length;
@@ -142,5 +172,13 @@ class TestDataRoot extends CharSequenceNode implements TestData {
     @Override
     public <T> Stream<T> collect() {
         return Stream.empty();
+    }
+
+    @Override
+    public void readOnly() {
+        readOnly = true;
+        if (server.isRunning()) {
+            server.stopRecording();
+        }
     }
 }

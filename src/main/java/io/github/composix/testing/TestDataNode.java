@@ -50,6 +50,9 @@ class TestDataNode extends CharSequenceNode implements TestData {
 
     @Override
     public <R extends Record> TestData refresh(Class<R> type) throws IOException {
+        if (root.readOnly) {
+            throw new IllegalStateException();
+        }
         int position = position();
         int index = position >>> SHIFT;
         position &= MASK;
@@ -182,5 +185,11 @@ class TestDataNode extends CharSequenceNode implements TestData {
             }
         }
         return writer.toString();
+    }
+
+    @Override
+    public void readOnly() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'readOnly'");
     }
 }

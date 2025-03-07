@@ -9,10 +9,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,6 +25,7 @@
 package io.github.composix.testing;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -38,45 +39,45 @@ import io.github.composix.models.examples.Pet;
 
 @WireMockTest
 @ExtendWith(DefaultInvocationInterceptor.class)
-public class PetstoreDataTest extends TestCase {
-    static final String PETSTORE_API = "https://petstore3.swagger.io/api/v3/openapi.json";
+class PetstoreDataTest extends TestCase {
 
-    @BeforeAll
-    static void beforeAll(WireMockRuntimeInfo wm) throws IOException {
-        final TestData testData = DEFAULT.testData(wm, PETSTORE_API);
-        DEFAULT.extendA(PETSTORE_API)
-                .extend(B, testData);
+  static final String PETSTORE_API =
+     "https://petstore.swagger.io/v2/swagger.json";
+    // "https://petstore3.swagger.io/api/v3/openapi.json";
+  static TestData testData;
 
-        testData.select("~", "pet", "findByStatus", "?status", null)
-                .select("=available")
-                .select("=pending")
-                .select("=sold")
-                .select()
-                .refresh(Pet.class);
+  @BeforeAll
+  static void beforeAll(WireMockRuntimeInfo wm)
+    throws IOException, URISyntaxException {
+    testData = DEFAULT.testData(wm, PETSTORE_API, false);
+    DEFAULT.extendA(PETSTORE_API).extend(B, testData);
+    testData
+      .select("~", "pet", "findByStatus", "?status", null)
+      .select("=available")
+      .select("=pending")
+      .select("=sold")
+      .select("~", "store", "order", ":orderId", null)
+      .select("=00")
+      .select("=01")
+      .select("=02")
+      .select("=03")
+      .select("=04")
+      .select("=05")
+      .select("=06")
+      .select("=07")
+      .select("=08")
+      .select("=09")
+      .select("=10")
+      .select("=11")
+      .select("=12")
+      .select("=13")
+      .select("=14")
+      .select("=15");
+    testData.select("~", "pet", "findByStatus", "?status").refresh(Pet.class);
+    testData.select("~", "store", "order", ":orderId").refresh(Order.class);
+    testData.readOnly();
+  }
 
-        testData.select("~", "store", "order", ":orderId", null)
-                .select("=00")
-                .select("=01")
-                .select("=02")
-                .select("=03")
-                .select("=04")
-                .select("=05")
-                .select("=06")
-                .select("=07")
-                .select("=08")
-                .select("=09")
-                .select("=10")
-                .select("=11")
-                .select("=12")
-                .select("=13")
-                .select("=14")
-                .select("=15")
-                .select()
-                .refresh(Order.class);
-    }
-
-    @Test
-    void testEmpty() {
-
-    }
+  @Test
+  void testEmpty() {}
 }

@@ -24,11 +24,15 @@
 
 package io.github.composix.testing;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 
 class DefaultTestCase extends TestCase {
     @Override
-    public TestData testData(WireMockRuntimeInfo wm, String baseUrl) {
-        return new TestDataRoot(wm, baseUrl);
+    public TestData testData(WireMockRuntimeInfo wm, String baseUrl, boolean wiremock) throws IOException, URISyntaxException{
+        return new TestDataRoot(wm, new URI(baseUrl), wiremock);
     }
 }
