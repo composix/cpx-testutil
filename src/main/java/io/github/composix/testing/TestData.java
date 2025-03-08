@@ -35,6 +35,8 @@ public interface TestData extends CharSequence {
 
     <R extends Record> TestData refresh(Class<R> type) throws IOException;
 
+    TestData refreshLines() throws IOException;
+
     <T> Stream<T> collect();
 
     void readOnly();

@@ -24,8 +24,10 @@
 
 package io.github.composix.testing;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.Arrays;
@@ -50,6 +52,17 @@ class TestDataNode extends CharSequenceNode implements TestData {
 
     @Override
     public <R extends Record> TestData refresh(Class<R> type) throws IOException {
+        refreshAny(type);
+        return this;
+    }
+
+    @Override
+    public TestData refreshLines() throws IOException {
+        refreshAny(String.class);
+        return this;
+    }
+
+    private void refreshAny(Class<?> type) throws IOException {
         if (root.readOnly) {
             throw new IllegalStateException();
         }
@@ -58,25 +71,15 @@ class TestDataNode extends CharSequenceNode implements TestData {
         position &= MASK;
         CharSequence[] path = root.paths.get(position);
         if (++index == path.length) {
-            boolean multi = true;
-            if (path[path.length - 1].charAt(0) == '=' && path[path.length - 2].charAt(0) == ':') {
-                multi = false;
-            }
-            final URI uri = URI.create(pathToUrl((byte) index, path));
-            if (multi) {
-                data = (Object[]) root.mapper.readValue(root.base.resolve(uri).toURL(), type.arrayType());
+            if (Record.class.isAssignableFrom(type)) {
+                readData(type, path);
             } else {
-                try {
-                    Object item = root.mapper.readValue(root.base.resolve(uri).toURL(), type);
-                    data = new Object[] { item };
-                } catch(FileNotFoundException e) {
-                    data = null;
-                }
+                readLines(path);
             }
         } else {
             final List<CharSequence> prefix = Arrays.asList(path).subList(0, index);
             while (prefix.equals(Arrays.asList(path).subList(0, index))) {
-                ((TestData) path[path.length - 1]).refresh(type);
+                ((TestDataNode) path[path.length - 1]).refreshAny(type);
                 try {
                     path = root.paths.get(++position);
                 } catch(IndexOutOfBoundsException e) {
@@ -84,7 +87,33 @@ class TestDataNode extends CharSequenceNode implements TestData {
                 }
             }
         }
-        return this;
+    }
+
+    private void readData(Class<?> type, CharSequence... path) throws IOException {
+        final int length = path.length;
+        boolean multi = true;
+        if (path[length - 1].charAt(0) == '=' && path[length - 2].charAt(0) == ':') {
+            multi = false;
+        }
+        final URI uri = URI.create(pathToUrl((byte) length, path));
+        if (multi) {
+            data = (Object[]) root.mapper.readValue(root.base.resolve(uri).toURL(), type.arrayType());
+        } else {
+            try {
+                Object item = root.mapper.readValue(root.base.resolve(uri).toURL(), type);
+                data = new Object[] { item };
+            } catch(FileNotFoundException e) {
+                data = null;
+            }
+        }
+    }
+
+    private void readLines(CharSequence... path) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(URI.create(pathToUrl((byte) path.length, path)).toURL().openStream()))) {
+            data = reader.lines().toArray(String[]::new);
+        } catch(IOException e) {
+            throw e;
+        }
     }
 
     @Override

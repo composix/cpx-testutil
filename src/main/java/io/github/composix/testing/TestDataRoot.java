@@ -170,6 +170,22 @@ class TestDataRoot extends CharSequenceNode implements TestData {
     }
 
     @Override
+    public TestData refreshLines() throws IOException {
+        if (readOnly) {
+            throw new IllegalStateException();
+        }
+        final int size = paths.size();
+        for (int i = 0; i < size; ++i) {
+            final CharSequence[] path = paths.get(i);
+            final CharSequence leaf = path[path.length - 1];
+            if (leaf instanceof TestData testData) {
+                testData.refreshLines();
+            }
+        }
+        return this;
+    }
+    
+    @Override
     public <T> Stream<T> collect() {
         return Stream.empty();
     }
