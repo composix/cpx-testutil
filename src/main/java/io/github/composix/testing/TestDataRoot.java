@@ -115,8 +115,13 @@ class TestDataRoot extends CharSequenceNode implements TestData {
             if (index == paths.size()) {
                 if (!"~".equals(path[0])) {
                     throw new IllegalArgumentException();
-                }    
-                paths.add(path);
+                }
+                if (path.length > 1 && path[1] != null) {
+                    path[0] = this;
+                    paths.add(path);
+                } else {
+                    return this;
+                }
             }
             rhs = paths.get(index);
             for (int i = 0; i < length; ++i) {
