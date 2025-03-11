@@ -27,12 +27,13 @@ package io.github.composix.testing;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 
 class DefaultTestCase extends TestCase {
     @Override
-    public TestData testData(WireMockRuntimeInfo wm, String baseUrl, boolean wiremock) throws IOException, URISyntaxException{
-        return new TestDataRoot(wm, new URI(baseUrl), wiremock);
+    public TestData testData(String baseUrl, Optional<WireMockRuntimeInfo> wiremock) throws IOException, URISyntaxException{
+        return new TestDataRoot(wiremock.orElse(null), new URI(baseUrl), wiremock.isPresent());
     }
 }

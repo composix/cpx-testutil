@@ -26,6 +26,7 @@ package io.github.composix.testing;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 
@@ -59,8 +60,8 @@ public class TestCase implements ArgsOrdinal{
         instance = factory;
     }
 
-    public TestData testData(WireMockRuntimeInfo wm, String baseUrl, boolean wiremock) throws IOException, URISyntaxException {
-        return instance.testData(wm, baseUrl, wiremock);
+    public TestData testData(String baseUrl, Optional<WireMockRuntimeInfo> wiremock) throws IOException, URISyntaxException {
+        return instance.testData(baseUrl, wiremock);
     }
 
     @Override
