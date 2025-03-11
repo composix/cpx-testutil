@@ -26,6 +26,7 @@ package io.github.composix.testing;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -49,7 +50,7 @@ class PetstoreDataTest extends TestCase {
   @BeforeAll
   static void beforeAll(WireMockRuntimeInfo wm)
     throws IOException, URISyntaxException {
-    testData = DEFAULT.testData(wm, PETSTORE_API, false);
+    testData = DEFAULT.testData(PETSTORE_API, Optional.of(wm));
     DEFAULT.extendA(PETSTORE_API).extend(B, testData);
     testData
       .select("~", "pet", "findByStatus", "?status", null)
