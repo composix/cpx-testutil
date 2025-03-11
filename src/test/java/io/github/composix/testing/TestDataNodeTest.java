@@ -41,15 +41,15 @@ class TestDataNodeTest extends TestCase {
 
   @BeforeAll
   static void beforeAll() throws IOException, URISyntaxException {
-    testData = DEFAULT.testData(".", Optional.empty());
+    testData = DEFAULT.testData("./", Optional.empty());
     assertSame(TestDataRoot.class, testData.getClass());
     paths = ((TestDataRoot) testData).paths;
   }
 
   @Test
   void testToString() throws IOException, URISyntaxException {
-    assertSame("pet", testData(".", Optional.empty()).select("~", "pet").toString());
-    assertSame("store", testData(".", Optional.empty()).select("~", "store").toString());
+    assertSame("pet", testData("./", Optional.empty()).select("~", "pet").toString());
+    assertSame("store", testData("./", Optional.empty()).select("~", "store").toString());
   }
 
   @Test

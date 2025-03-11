@@ -44,7 +44,7 @@ class TestDataRootTest extends TestCase {
 
   @BeforeEach
   void beforeEach() throws IOException, URISyntaxException {
-    testData = (TestDataRoot) DEFAULT.testData(".", Optional.empty());
+    testData = (TestDataRoot) DEFAULT.testData("./", Optional.empty());
     paths = testData.paths;
     assertEquals(0, paths.size());
     assertFalse(testData.slash);

@@ -67,7 +67,13 @@ class TestDataRoot extends CharSequenceNode implements TestData {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         final URI base = uri.resolve("");
         uriSwagger = base.relativize(uri);
-        if (wiremock) {
+        if (uri.getPath().endsWith("/")) {
+            this.base = uri;
+            swagger = null;
+            if (wiremock) {
+                throw new IllegalArgumentException("WireMock requires OpenAPI specification file; not a directory: " + uri);
+            }
+        } else if (wiremock) {
             URI baseWM = new URI(wm.getHttpBaseUrl());
             final URL url = baseWM.resolve(uriSwagger).toURL();
             JsonNode swagger;
