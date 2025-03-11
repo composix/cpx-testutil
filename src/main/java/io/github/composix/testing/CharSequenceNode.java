@@ -26,6 +26,7 @@ package io.github.composix.testing;
 
 class CharSequenceNode implements CharSequence {
     private final String value;
+    boolean slash = false;
 
     CharSequenceNode(CharSequence value) {
         this.value = value.toString().intern();

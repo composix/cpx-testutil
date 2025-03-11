@@ -36,9 +36,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 class TestDataNode extends CharSequenceNode implements TestData {
+
   static final int SHIFT = 24, MASK = (1 << SHIFT) - 1;
 
-  boolean slash = false;
   private final TestDataRoot root;
   private final int pos;
 
