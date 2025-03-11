@@ -24,6 +24,7 @@
 
 package io.github.composix.testing;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
