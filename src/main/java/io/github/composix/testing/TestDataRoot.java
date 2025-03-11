@@ -57,6 +57,9 @@ class TestDataRoot extends CharSequenceNode implements TestData {
 
     TestDataRoot(WireMockRuntimeInfo wm, URI uri, boolean wiremock) throws IOException, URISyntaxException {
         super("~");
+        if (!uri.isAbsolute()) {
+            uri = new File(".").toURI().resolve(uri);
+        }
         server = new WireMockServer();
         mapper = new ObjectMapper();
         mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true);
