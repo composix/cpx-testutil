@@ -9,10 +9,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -48,8 +49,13 @@ class TestDataNodeTest extends TestCase {
 
   @Test
   void testToString() throws IOException, URISyntaxException {
-    assertSame("pet", testData("./", Optional.empty()).select("~", "pet").toString());
-    assertSame("store", testData("./", Optional.empty()).select("~", "store").toString());
+    assertAllSame(
+      all("pet","store"),
+      all(
+        testData("./", Optional.empty()).select("~", "pet").toString(),
+        testData("./", Optional.empty()).select("~", "store").toString()
+      )
+    );
   }
 
   @Test
@@ -67,16 +73,42 @@ class TestDataNodeTest extends TestCase {
     final int size = paths.size();
     assertEquals(6, size);
     for (int i = 0; i < size; ++i) {
-      assertSame(testData, paths.get(i)[0]);
+      assertAllSame(testData, paths.get(i)[0]);
       if (i < size >> 1) {
-        assertSame("pet", paths.get(i)[1]);
-        assertSame("findByStatus", paths.get(i)[2]);
-        assertSame("?status", paths.get(i)[3].toString());
+        assertAllSame(
+          all("pet", "findByStatus", "?status"),
+          all(
+            (String) paths.get(i)[1],
+            (String) paths.get(i)[2],
+            (String) paths.get(i)[3].toString()
+          )
+        );
       } else {
-        assertSame("store", paths.get(i)[1]);
-        assertSame("order", paths.get(i)[2]);
-        assertSame(":orderId", paths.get(i)[3].toString());
+        assertAllSame(
+          all("store","order",":orderId"),
+          all(
+            (String) paths.get(i)[1],
+            (String) paths.get(i)[2],
+            (String) paths.get(i)[3].toString()            
+          )
+        );
       }
     }
+  }
+
+  @Test
+  void testRefreshLines() throws IOException, URISyntaxException {
+    TestData pwd = testData("./", Optional.empty());
+    pwd.select("~", null)
+      .select(".gitignore").refreshLines()
+      .select("LICENSE").refreshLines();
+    assertAllEquals(
+      all("target/"), 
+      all(pwd.select("~",".gitignore").collect().limit(1).toArray(String[]::new))
+    );
+    assertAllEquals(
+      all("MIT License", "", "Copyright (c) 2023-2025 composix", ""),
+      all(pwd.select("~","LICENSE").collect().limit(4).toArray(String[]::new))
+    );
   }
 }

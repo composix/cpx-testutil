@@ -24,6 +24,10 @@
 
 package io.github.composix.testing;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -39,6 +43,51 @@ import io.github.composix.math.SafeMatrix;
 public class TestCase implements ArgsOrdinal{
     protected static final TestCase DEFAULT = new DefaultTestCase();
     private static final MutableOrder ORDER = OMEGA.order();
+
+    protected static Object all(long... values) {
+        return values;
+    }
+
+    protected static Object all(String... values) {
+        return values;
+    }
+
+    protected static Object all(Object... values) {
+        return values;
+    }
+
+    protected static void assertAllEquals(Object expected, Object actual) {
+        switch (expected) {
+            case Object[] expectedObjects:
+                assertArrayEquals(expectedObjects, (Object[]) actual);
+                assertSame(expected.getClass(), actual.getClass());
+                break;
+            case long[] expectedLongs:
+                assertArrayEquals(expectedLongs, (long[]) actual);
+                break;
+            default:
+                assertEquals(expected, actual);
+                break;
+        }
+    }
+
+    protected static void assertAllSame(Object expected, Object actual) {
+        assertAllEquals(expected, actual);
+        if (expected.getClass().isArray()) {
+            assertAllEquals(expected, actual);
+            switch(expected) {
+                case Object[] expectedObjects:
+                    for (int i = 0; i < expectedObjects.length; ++i) {
+                        assertSame(expectedObjects[i], ((Object[]) actual)[i]);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            assertSame(expected, actual);
+        }
+    }
 
     private TestCase instance;
 
