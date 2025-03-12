@@ -128,7 +128,10 @@ class TestDataNode extends CharSequenceNode implements TestData {
         )
       )
     ) {
-      data = reader.lines().toArray(String[]::new);
+      data = reader.lines().map(String::trim).map(str -> {
+        final int lastIndex = str.length() - 1;
+        return !str.isEmpty() && str.charAt(0) == '"' && str.charAt(lastIndex) == '"' ? str.substring(1, lastIndex) : str;
+      }).toArray(String[]::new);
     } catch (IOException e) {
       throw e;
     }
