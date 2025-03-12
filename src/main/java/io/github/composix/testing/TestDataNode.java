@@ -121,7 +121,10 @@ class TestDataNode extends CharSequenceNode implements TestData {
     try (
       BufferedReader reader = new BufferedReader(
         new InputStreamReader(
-          URI.create(pathToUrl((byte) path.length, path)).toURL().openStream()
+          root.base
+            .resolve(URI.create(pathToUrl((byte) path.length, path)))
+            .toURL()
+            .openStream()
         )
       )
     ) {
