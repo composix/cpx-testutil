@@ -160,7 +160,7 @@ class TestDataRoot extends CharSequenceNode implements TestData {
             }
             ((TestDataNode) result).slash = true;
         } else if (result instanceof TestData) {
-            ((TestDataNode) result).slash = false;
+            ((CharSequenceNode) result).slash = false;
         } else {
             pos |= lastIndex << TestDataNode.SHIFT;
             result = rhs[lastIndex] = new TestDataNode(result, this, pos);

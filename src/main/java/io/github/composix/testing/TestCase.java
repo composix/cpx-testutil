@@ -38,7 +38,6 @@ import io.github.composix.math.Args;
 import io.github.composix.math.ArgsOrdinal;
 import io.github.composix.math.MutableOrder;
 import io.github.composix.math.Ordinal;
-import io.github.composix.math.SafeMatrix;
 
 public class TestCase implements ArgsOrdinal{
     protected static final TestCase DEFAULT = new DefaultTestCase();
@@ -115,6 +114,6 @@ public class TestCase implements ArgsOrdinal{
 
     @Override
     public Args extend(Ordinal col, Object... arrays) {
-        return new SafeMatrix().extend(col, arrays);
+        return A.extend(col, arrays);
     }
 }
