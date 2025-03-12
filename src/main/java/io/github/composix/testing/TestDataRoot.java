@@ -114,11 +114,23 @@ class TestDataRoot extends CharSequenceNode implements TestData {
             index = -index - 1;
             if (index == paths.size()) {
                 if (!"~".equals(path[0])) {
-                    throw new IllegalArgumentException();
+                    if (slash) {
+                        CharSequence[] newPath = new CharSequence[path.length + 1];
+                        newPath[0] = "~";
+                        System.arraycopy(path, 0, newPath, 1, path.length);
+                        return select(newPath);
+                    } else {
+                        throw new IllegalArgumentException();
+                    }
                 }
-                if (path.length > 1 && path[1] != null) {
-                    path[0] = this;
-                    paths.add(path);
+                if (path.length > 1) {
+                    if (path[1] == null) {
+                        slash = true;
+                        return this;
+                    } else {
+                        path[0] = this;
+                        paths.add(path);    
+                    }
                 } else {
                     return this;
                 }
