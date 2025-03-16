@@ -32,31 +32,30 @@ import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
 class TestCaseTest extends TestCase {
-  static byte[] bytes = all((byte) 0);
-  static short[] shorts = all((short) 0);
-  static int[] ints = all(0);
-  static long[] longs = all(0L);
-  static float[] floats = all(0F);
-  static double[] doubles = all(0D);
-  static boolean[] booleans = all(false);
-  static char[] chars = all('0');
+  static byte[] bytes = any((byte) 0);
+  static short[] shorts = any((short) 0);
+  static int[] ints = any(0);
+  static long[] longs = any(0L);
+  static float[] floats = any(0F);
+  static double[] doubles = any(0D);
+  static boolean[] booleans = any(false);
+  static char[] chars = any('0');
   static String[] strings = all("");
 
   @Test 
-  void testAll_primitives() {
-    assertSame(bytes, all(bytes));
-    assertSame(shorts, all(shorts));
-    assertSame(ints, all(ints));
-    assertSame(longs, all(longs));
-    assertSame(floats, all(floats));
-    assertSame(doubles, all(doubles));
-    assertSame(booleans, all(booleans));
-    assertSame(chars, all(chars));
-    assertSame(strings, all(strings));
+  void testAny() {
+    assertSame(bytes, any(bytes));
+    assertSame(shorts, any(shorts));
+    assertSame(ints, any(ints));
+    assertSame(longs, any(longs));
+    assertSame(floats, any(floats));
+    assertSame(doubles, any(doubles));
+    assertSame(booleans, any(booleans));
+    assertSame(chars, any(chars));
   }
 
   @Test
-  void testAll_objects() {
+  void testAll() {
     assertAllSame(new byte[][] {bytes, bytes}, all(bytes, bytes));
     assertAllSame(new short[][] {shorts, shorts}, all(shorts, shorts));
     assertAllSame(new int[][] {ints, ints}, all(ints, ints));

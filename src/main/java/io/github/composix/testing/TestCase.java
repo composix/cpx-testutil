@@ -42,35 +42,35 @@ public class TestCase implements ArgsOrdinal {
   protected static final TestCase DEFAULT = new DefaultTestCase();
   private static final MutableOrder ORDER = OMEGA.order();
 
-  protected static byte[] all(byte... values) {
+  protected static byte[] any(byte... values) {
     return values;
   }
 
-  protected static short[] all(short... values) {
+  protected static short[] any(short... values) {
     return values;
   }
 
-  protected static int[] all(int... values) {
+  protected static int[] any(int... values) {
     return values;
   }
 
-  protected static long[] all(long... values) {
+  protected static long[] any(long... values) {
     return values;
   }
 
-  protected static float[] all(float... values) {
+  protected static float[] any(float... values) {
     return values;
   }
 
-  protected static double[] all(double... values) {
+  protected static double[] any(double... values) {
     return values;
   }
 
-  protected static boolean[] all(boolean... values) {
+  protected static boolean[] any(boolean... values) {
     return values;
   }
 
-  protected static char[] all(char... values) {
+  protected static char[] any(char... values) {
     return values;
   }
 
