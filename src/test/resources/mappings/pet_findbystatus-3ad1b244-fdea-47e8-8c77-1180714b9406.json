@@ -1,0 +1,24 @@
+{
+  "id" : "3ad1b244-fdea-47e8-8c77-1180714b9406",
+  "name" : "pet_findbystatus",
+  "request" : {
+    "url" : "/pet/findByStatus?status=pending",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"id\":3,\"category\":{\"id\":2,\"name\":\"Cats\"},\"name\":\"Cat 3\",\"photoUrls\":[\"url1\",\"url2\"],\"tags\":[{\"id\":1,\"name\":\"tag3\"},{\"id\":2,\"name\":\"tag4\"}],\"status\":\"pending\"},{\"id\":2444,\"name\":\"Bernie\",\"photoUrls\":[\"https://example.com/photos/dog1.jpg\",\"https://ZjBGEZcWZr.com\"],\"tags\":[{\"id\":3190,\"name\":\"Cleotilde\"},{\"id\":793,\"name\":\"Deshawn\"}],\"status\":\"pending\"},{\"id\":608,\"name\":\"Malcom\",\"photoUrls\":[\"https://example.com/photos/dog1.jpg\",\"https://NgJeQiAYFF.com\"],\"status\":\"pending\"}]",
+    "headers" : {
+      "Access-Control-Expose-Headers" : "Content-Disposition",
+      "Server" : "Jetty(9.4.53.v20231009)",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "GET, POST, DELETE, PUT",
+      "Access-Control-Allow-Headers" : "Content-Type, api_key, Authorization",
+      "Date" : "Sun, 16 Mar 2025 19:12:36 GMT",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "3ad1b244-fdea-47e8-8c77-1180714b9406",
+  "persistent" : true,
+  "insertionIndex" : 18
+}

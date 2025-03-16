@@ -1,0 +1,24 @@
+{
+  "id" : "da089c95-0b85-424a-9737-c361e723fe64",
+  "name" : "store_order_13",
+  "request" : {
+    "url" : "/store/order/13",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 404,
+    "body" : "Order not found",
+    "headers" : {
+      "Access-Control-Expose-Headers" : "Content-Disposition",
+      "Server" : "Jetty(9.4.53.v20231009)",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "GET, POST, DELETE, PUT",
+      "Access-Control-Allow-Headers" : "Content-Type, api_key, Authorization",
+      "Date" : "Sun, 16 Mar 2025 19:12:42 GMT",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "da089c95-0b85-424a-9737-c361e723fe64",
+  "persistent" : true,
+  "insertionIndex" : 3
+}

@@ -1,0 +1,24 @@
+{
+  "id" : "91a6fdb5-b47c-4327-8692-b9a332adc3a1",
+  "name" : "pet_findbystatus",
+  "request" : {
+    "url" : "/pet/findByStatus?status=available",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"id\":4,\"category\":{\"id\":1,\"name\":\"Dogs\"},\"name\":\"Dog 1\",\"photoUrls\":[\"url1\",\"url2\"],\"tags\":[{\"id\":1,\"name\":\"tag1\"},{\"id\":2,\"name\":\"tag2\"}],\"status\":\"available\"},{\"id\":7,\"category\":{\"id\":4,\"name\":\"Lions\"},\"name\":\"Lion 1\",\"photoUrls\":[\"url1\",\"url2\"],\"tags\":[{\"id\":1,\"name\":\"tag1\"},{\"id\":2,\"name\":\"tag2\"}],\"status\":\"available\"},{\"id\":9,\"category\":{\"id\":4,\"name\":\"Lions\"},\"name\":\"Lion 3\",\"photoUrls\":[\"url1\",\"url2\"],\"tags\":[{\"id\":1,\"name\":\"tag3\"},{\"id\":2,\"name\":\"tag4\"}],\"status\":\"available\"},{\"id\":101,\"category\":{\"id\":1,\"name\":\"Dogs\"},\"name\":\"Tuzik\",\"photoUrls\":[],\"tags\":[],\"status\":\"available\"},{\"id\":100256,\"category\":{\"id\":2,\"name\":\"Dogs\"},\"name\":\"abcaqbcacb\",\"photoUrls\":[],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"available\"},{\"id\":123456,\"category\":{\"id\":1,\"name\":\"Dogs\"},\"name\":\"donkey\",\"photoUrls\":[\"string\"],\"tags\":[{\"id\":112233,\"name\":\"Ruzalil_pets\"}],\"status\":\"available\"},{\"id\":123458521,\"category\":{\"id\":0,\"name\":\"Dogs\"},\"name\":\"Milou\",\"photoUrls\":[\"no\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"available\"},{\"id\":999,\"name\":\"test\",\"photoUrls\":[],\"tags\":[],\"status\":\"available\"},{\"id\":43,\"name\":\"Michal\",\"photoUrls\":[],\"tags\":[{\"id\":2222,\"name\":\"Catarina\"},{\"id\":3252,\"name\":\"Peg\"}],\"status\":\"available\"},{\"id\":3630,\"name\":\"Roger\",\"photoUrls\":[\"https://example.com/photos/dog1.jpg\",\"https://hxOLxhGjQY.com\"],\"tags\":[{\"id\":5750,\"name\":\"Janetta\"},{\"id\":5939,\"name\":\"Terrell\"}],\"status\":\"available\"},{\"id\":5605,\"name\":\"Chia\",\"photoUrls\":[\"https://example.com/default.jpg\",\"https://example.com/one.jpg\"],\"tags\":[{\"id\":0,\"name\":\"Default Tag\"}],\"status\":\"available\"},{\"id\":376,\"name\":\"Tristan\",\"photoUrls\":[\"https://example.com/default.jpg\",\"https://example.com/one.jpg\"],\"tags\":[{\"id\":0,\"name\":\"Default Tag\"}],\"status\":\"available\"},{\"id\":920,\"category\":{\"id\":0,\"name\":\"dsfsdf\"},\"name\":\"sdfsdfdsf\",\"photoUrls\":[\"https://preview.redd.it/artist-%E3%81%93%E3%81%BE%E3%81%8D-gou-matsuoka-v0-8yve625unuoe1.jpeg?width=1080&crop=smart&auto=webp&s=b4dcd1dfbf9775e47492242919037ad8be2e3a9b\"],\"tags\":[{\"id\":0,\"name\":\"sdfsdf\"}],\"status\":\"available\"},{\"id\":2,\"category\":{\"id\":0,\"name\":\"Cats\"},\"name\":\"Updated Kitty\",\"photoUrls\":[\"string\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"available\"},{\"id\":0,\"category\":{\"id\":1,\"name\":\"Dogs\"},\"name\":\"doggie\",\"photoUrls\":[\"string\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"available\"},{\"id\":130,\"category\":{\"id\":131,\"name\":\"Boa\"},\"name\":\"Kaavvv\",\"photoUrls\":[\"https://commons.wikimedia.org/wiki/File:Boa_constrictor_(2).jpg?uselang=ru\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"available\"},{\"id\":1287138758235,\"name\":\"Woofy Mc Woofer\",\"photoUrls\":[],\"tags\":[],\"status\":\"available\"},{\"id\":111,\"category\":{\"id\":1,\"name\":\"Dogs\"},\"name\":\"Alisa\",\"photoUrls\":[\"string\"],\"tags\":[{\"id\":10102525,\"name\":\"Anna_F\"}],\"status\":\"available\"},{\"id\":10,\"category\":{\"id\":1,\"name\":\"Dogs\"},\"name\":\"doggie\",\"photoUrls\":[\"string\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"available\"}]",
+    "headers" : {
+      "Access-Control-Expose-Headers" : "Content-Disposition",
+      "Server" : "Jetty(9.4.53.v20231009)",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "GET, POST, DELETE, PUT",
+      "Access-Control-Allow-Headers" : "Content-Type, api_key, Authorization",
+      "Date" : "Sun, 16 Mar 2025 19:12:35 GMT",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "91a6fdb5-b47c-4327-8692-b9a332adc3a1",
+  "persistent" : true,
+  "insertionIndex" : 19
+}

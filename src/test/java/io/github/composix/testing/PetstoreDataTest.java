@@ -43,14 +43,14 @@ import io.github.composix.models.examples.Pet;
 class PetstoreDataTest extends TestCase {
 
   static final String PETSTORE_API =
-     "https://petstore.swagger.io/v2/swagger.json";
-    // "https://petstore3.swagger.io/api/v3/openapi.json";
+    // "https://petstore.swagger.io/v2/swagger.json";
+     "https://petstore3.swagger.io/api/v3/openapi.json";
   static TestData testData;
 
   @BeforeAll
   static void beforeAll(WireMockRuntimeInfo wm)
     throws IOException, URISyntaxException {
-    testData = DEFAULT.testData(PETSTORE_API, Optional.of(wm).empty());
+    testData = DEFAULT.testData(PETSTORE_API, Optional.of(wm));
     DEFAULT.extendA(PETSTORE_API).extend(B, testData);
     testData
       .select("~", "pet", "findByStatus", "?status", null)
