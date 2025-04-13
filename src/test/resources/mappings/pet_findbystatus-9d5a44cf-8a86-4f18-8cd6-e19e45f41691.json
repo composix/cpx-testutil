@@ -1,0 +1,23 @@
+{
+  "id" : "9d5a44cf-8a86-4f18-8cd6-e19e45f41691",
+  "name" : "pet_findbystatus",
+  "request" : {
+    "url" : "/pet/findByStatus?status=sold",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"id\":9223372036854769686,\"category\":{\"id\":0,\"name\":\"string\"},\"name\":\"doggie\",\"photoUrls\":[\"string\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"sold\"},{\"id\":12346,\"category\":{\"id\":2,\"name\":\"amstaff\"},\"name\":\"S'Den-Mark\",\"photoUrls\":[\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7iy96IXMuCljzUQSqM85p9Lg7BDULVZFtWw&s\"],\"tags\":[{\"id\":1,\"name\":\"Friendly\"}],\"status\":\"sold\"},{\"id\":13,\"category\":{\"id\":0,\"name\":\"cats\"},\"photoUrls\":[\"string\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"sold\"},{\"id\":7574746,\"category\":{\"id\":1,\"name\":\"Cat\"},\"name\":\"Hardy\",\"photoUrls\":[\"https://i.pinimg.com/originals/5c/2c/44/5c2c44f16da1caf134c00bc4f9c72ea0.jpg\"],\"tags\":[{\"id\":7805,\"name\":\"Mainecoon\"}],\"status\":\"sold\"},{\"id\":8989,\"category\":{\"id\":1,\"name\":\"cats\"},\"name\":\"vovchik\",\"photoUrls\":[\"string\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"sold\"},{\"id\":11042025,\"category\":{\"id\":0,\"name\":\"Mur\"},\"name\":\"doggie\",\"photoUrls\":[\"string\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"sold\"}]",
+    "headers" : {
+      "Server" : "Jetty(9.2.9.v20150224)",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "GET, POST, DELETE, PUT",
+      "Access-Control-Allow-Headers" : "Content-Type, api_key, Authorization",
+      "Date" : "Sun, 13 Apr 2025 17:34:35 GMT",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "9d5a44cf-8a86-4f18-8cd6-e19e45f41691",
+  "persistent" : true,
+  "insertionIndex" : 37
+}

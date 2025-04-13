@@ -1,0 +1,23 @@
+{
+  "id" : "0c0eb145-d390-464c-b1c6-62d54338efcc",
+  "name" : "pet_findbystatus",
+  "request" : {
+    "url" : "/pet/findByStatus?status=pending",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[{\"id\":12345677,\"category\":{\"id\":3,\"name\":\"CAT\"},\"name\":\"MUS'KA\",\"photoUrls\":[],\"tags\":[],\"status\":\"pending\"},{\"id\":242025,\"category\":{\"id\":0,\"name\":\"Lucifer\"},\"name\":\"CAT\",\"photoUrls\":[\"string\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"pending\"},{\"id\":9223372036854770119,\"category\":{\"id\":-98006934,\"name\":\"Ut in\"},\"name\":\"doggie\",\"photoUrls\":[\"nisi cupidatat\",\"ut eu cupidatat Excepteur\"],\"tags\":[{\"id\":-72310482,\"name\":\"labore ullamco aliquip Duis\"},{\"id\":-19804204,\"name\":\"cillum nulla dolore nisi\"}],\"status\":\"pending\"},{\"id\":922337203685477590,\"name\":\"chedder-89811222\",\"photoUrls\":[\"./dog.png\"],\"tags\":[],\"status\":\"pending\"},{\"id\":9223372036854770161,\"category\":{\"id\":0,\"name\":\"string\"},\"name\":\"doggie\",\"photoUrls\":[\"string\"],\"tags\":[{\"id\":0,\"name\":\"string\"}],\"status\":\"pending\"}]",
+    "headers" : {
+      "Server" : "Jetty(9.2.9.v20150224)",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "GET, POST, DELETE, PUT",
+      "Access-Control-Allow-Headers" : "Content-Type, api_key, Authorization",
+      "Date" : "Sun, 13 Apr 2025 17:34:34 GMT",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "0c0eb145-d390-464c-b1c6-62d54338efcc",
+  "persistent" : true,
+  "insertionIndex" : 38
+}

@@ -43,8 +43,8 @@ import io.github.composix.models.examples.Pet;
 class PetstoreDataTest extends TestCase {
 
   static final String PETSTORE_API =
-    // "https://petstore.swagger.io/v2/swagger.json";
-     "https://petstore3.swagger.io/api/v3/openapi.json";
+     "https://petstore.swagger.io/v2/swagger.json";
+    // "https://petstore3.swagger.io/api/v3/openapi.json";
   static TestData testData;
 
   @BeforeAll

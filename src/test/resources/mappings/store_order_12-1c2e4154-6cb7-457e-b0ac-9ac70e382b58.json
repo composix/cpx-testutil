@@ -1,0 +1,23 @@
+{
+  "id" : "1c2e4154-6cb7-457e-b0ac-9ac70e382b58",
+  "name" : "store_order_12",
+  "request" : {
+    "url" : "/store/order/12",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"id\":12,\"petId\":7,\"quantity\":101,\"shipDate\":\"2024-12-14T15:53:45.452+0000\",\"status\":\"available\",\"complete\":true}",
+    "headers" : {
+      "Server" : "Jetty(9.2.9.v20150224)",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "GET, POST, DELETE, PUT",
+      "Access-Control-Allow-Headers" : "Content-Type, api_key, Authorization",
+      "Date" : "Sun, 13 Apr 2025 17:34:44 GMT",
+      "Content-Type" : "application/json"
+    }
+  },
+  "uuid" : "1c2e4154-6cb7-457e-b0ac-9ac70e382b58",
+  "persistent" : true,
+  "insertionIndex" : 24
+}
