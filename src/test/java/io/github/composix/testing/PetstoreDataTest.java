@@ -51,7 +51,7 @@ class PetstoreDataTest extends TestCase {
   static void beforeAll(WireMockRuntimeInfo wm)
     throws IOException, URISyntaxException {
     testData = DEFAULT.testData(PETSTORE_API, Optional.of(wm));
-    DEFAULT.extendA(PETSTORE_API).extend(B, testData);
+    DEFAULT.extend(A, PETSTORE_API).extend(B, testData);
     testData
       .select("~", "pet", "findByStatus", "?status", null)
       .select("=available")

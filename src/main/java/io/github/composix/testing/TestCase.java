@@ -28,19 +28,19 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
-import io.github.composix.math.Args;
-import io.github.composix.math.ArgsOrdinal;
-import io.github.composix.math.MutableOrder;
-import io.github.composix.math.Ordinal;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+
+import io.github.composix.math.Args;
+import io.github.composix.math.ArgsOrdinal;
+import io.github.composix.math.Ordinal;
+
 public class TestCase implements ArgsOrdinal {
 
   protected static final TestCase DEFAULT = new DefaultTestCase();
-  private static final MutableOrder ORDER = OMEGA.order();
 
   protected static byte[] any(byte... values) {
     return values;
@@ -138,16 +138,6 @@ public class TestCase implements ArgsOrdinal {
     instance = DEFAULT;
   }
 
-  @Override
-  public MutableOrder clone() throws CloneNotSupportedException {
-    return (MutableOrder) OMEGA.clone();
-  }
-
-  @Override
-  public MutableOrder order() {
-    return ORDER;
-  }
-
   public void register(TestCase factory) {
     instance = factory;
   }
@@ -160,6 +150,12 @@ public class TestCase implements ArgsOrdinal {
   }
 
   @Override
+  @Deprecated
+  public Args clone() throws CloneNotSupportedException {
+    throw new CloneNotSupportedException();
+  }
+
+  @Deprecated
   public Args extend(Ordinal col, Object... arrays) {
     return A.extend(col, arrays);
   }
